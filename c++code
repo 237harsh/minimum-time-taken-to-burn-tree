@@ -1,0 +1,77 @@
+class Solution {
+  public:
+  Node *targ;
+  //make parent node in unordered map using level order traversal
+  void par(Node* root,unordered_map<Node*,Node*>&pt,int tar)
+  {
+      queue<Node*>q;
+      q.push(root);
+      while(!q.empty())
+      {
+          int n=q.size();
+          for(int i=1;i<=n;i++)
+          {
+              Node *p=q.front();
+              q.pop();
+              if(p->data==tar)
+              {
+                  targ=p;
+              }
+              if(p->left)
+              {
+                  pt[p->left]=p;
+                  q.push(p->left);
+              }
+               if(p->right)
+              {
+                  pt[p->right]=p;
+                  q.push(p->right);
+              }
+          }
+      }
+  }
+    int minTime(Node* root, int tar) 
+    {
+         unordered_map<Node*,Node*>pt;
+         par(root,pt,tar);
+          unordered_map<Node*,bool>vis;
+         queue<Node*>q;
+         q.push(targ);
+         vis[targ]=1;
+         int t=0;
+         //do the level order traversal and burn nodes at same level;
+         while(!q.empty())
+         {
+            int f=0;
+             int n=q.size();
+             for(int i=1;i<=n;i++)
+             {
+                 Node *p=q.front();
+                 q.pop();
+                 if(p->left&&!vis[p->left])
+                 {
+                     f=1;
+                     vis[p->left]=1;
+                     q.push(p->left);
+                 }
+                 if(p->right&&!vis[p->right])
+                 {
+                     f=1;
+                     vis[p->right]=1;
+                     q.push(p->right);
+                 }
+                 if(pt[p]&&!vis[pt[p]])
+                 {
+                     f=1;
+                     vis[pt[p]]=1;
+                     q.push(pt[p]);
+                 }
+             }
+             if(f)
+             t++;
+         }
+         return t;
+    }
+};
+
+https://practice.geeksforgeeks.org/problems/burning-tree/1
